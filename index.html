@@ -120,14 +120,13 @@
             width: 45px;
             height: 45px;
             border-radius: 8px;
-            background-color: transparent;
+            background-color: rgba(255, 255, 255, 0.1);
             color: #ffffff;
             font-size: 24px;
             text-decoration: none;
-            transition: transform 0.2s, background-color 0.2s;
+            transition: transform 0.2s, background-color 0.2s, color 0.2s;
             cursor: pointer;
             border: none;
-            /* Tạo viền đen dày bao quanh hình dáng của từng icon */
             filter: drop-shadow(-1px -1px 0px #000) 
                     drop-shadow(1px -1px 0px #000) 
                     drop-shadow(-1px 1px 0px #000) 
@@ -136,19 +135,56 @@
         }
         .social-icon:hover {
             transform: scale(1.1);
-            background-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Nút Osu! hồng đặc trưng */
+        /* --- MÀU SẮC THƯƠNG HIỆU CHUẨN WEB --- */
+
+        /* Discord: Xanh Blurple đặc trưng */
+        .social-icon.discord:hover {
+            background-color: #5865F2;
+            color: #ffffff;
+        }
+
+        /* Facebook: Xanh lam chính chủ */
+        .social-icon.facebook:hover {
+            background-color: #1877F2;
+            color: #ffffff;
+        }
+
+        /* TikTok: Nút đen */
+        .social-icon.tiktok:hover {
+            background-color: #010101;
+            color: #ffffff;
+        }
+
+        /* Roblox: Màu xanh dương sáng theo ảnh logo bạn gửi */
+        .social-icon.roblox:hover {
+            background-color: #2b61ff;
+            color: #ffffff;
+        }
+
+        /* Osu! hồng đặc trưng */
         .social-icon.osu {
-            background-color: #ff66aa;
+            background-color: rgba(255, 102, 170, 0.2);
+            color: #ff66aa;
             font-size: 16px;
             font-weight: bold;
             font-family: sans-serif;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
         }
+        .social-icon.osu:hover {
+            background-color: #ff66aa;
+            color: #ffffff;
+        }
+
+        /* Minecraft: Màu xanh lá cỏ sáng theo ảnh logo bạn gửi */
+        .social-icon.minecraft:hover {
+            background-color: #6cb843;
+            color: #ffffff;
+        }
+
 
         /* Lượt xem góc trái dưới */
         .view-count {
@@ -300,17 +336,17 @@
         <h1 class="username">ヒカル (Nhatt Huyy)</h1>
         
         <div class="social-links">
-            <button class="social-icon" onclick="copyText('betsuni036')" title="Copy Discord ID"><i class="fab fa-discord"></i></button>
+            <button class="social-icon discord" onclick="copyText('betsuni036')" title="Copy Discord ID"><i class="fab fa-discord"></i></button>
             
-            <a href="https://www.facebook.com/profile.php?id=61576923092872" target="_blank" class="social-icon" title="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61576923092872" target="_blank" class="social-icon facebook" title="Facebook"><i class="fab fa-facebook"></i></a>
             
-            <a href="https://www.tiktok.com/@itsabsolutepeak" target="_blank" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.tiktok.com/@itsabsolutepeak" target="_blank" class="social-icon tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
             
-            <button class="social-icon" onclick="openModal('modalRoblox')" title="Roblox Users"><i class="fas fa-cube"></i></button>
+            <button class="social-icon roblox" onclick="openModal('modalRoblox')" title="Roblox Users"><i class="fas fa-cube"></i></button>
             
             <a href="https://osu.ppy.sh/users/38825307" target="_blank" class="social-icon osu" title="Osu!">osu!</a>
 
-            <button class="social-icon" onclick="openModal('modalMinecraft')" title="Minecraft Users"><i class="fas fa-cubes"></i></button>
+            <button class="social-icon minecraft" onclick="openModal('modalMinecraft')" title="Minecraft Users"><i class="fas fa-cubes"></i></button>
         </div>
 
         <div class="view-count">
