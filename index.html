@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - ヒカル</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url('nani.webp') no-repeat center center/cover;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* 0.5: Màn hình chờ Click to enter */
+        .overlay-entry {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .overlay-text {
+            color: #ffffff;
+            font-size: 24px;
+            letter-spacing: 2px;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Giao diện chính Card Profile */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            color: #ffffff;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            position: relative;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s ease;
+        }
+        .profile-card.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Ảnh đại diện tròn */
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+        }
+
+        /* Viền chữ đen siêu dày, đổ bóng sâu chống lấn màu */
+        .username {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 25px 0;
+            letter-spacing: 0.5px;
+            color: #ffffff; 
+            text-shadow: 
+                -2px -2px 0 #000,  
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                -1px -1px 0 #000,  
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000,
+                 0px  0px 8px rgba(0, 0, 0, 0.9),
+                 2px  4px 10px rgba(0, 0, 0, 0.9); 
+        }
+
+        /* Khối chứa các biểu tượng social */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Định dạng chung nút icon + Thêm đổ bóng viền đen chống lấn màu cho icon */
+        .social-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 24px;
+            text-decoration: none;
+            transition: transform 0.2s, background-color 0.2s, color 0.2s;
+            cursor: pointer;
+            border: none;
+            filter: drop-shadow(-1px -1px 0px #000) 
+                    drop-shadow(1px -1px 0px #000) 
+                    drop-shadow(-1px 1px 0px #000) 
+                    drop-shadow(1px 1px 0px #000)
+                    drop-shadow(0px 2px 4px rgba(0,0,0,0.8));
+        }
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Custom Icon SVG cho Roblox */
+        .roblox-svg-icon {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* --- MÀU SẮC THƯƠNG HIỆU CHUẨN WEB --- */
+
+        /* Discord: Xanh Blurple đặc trưng */
+        .social-icon.discord:hover {
+            background-color: #5865F2;
+            color: #ffffff;
+        }
+
+        /* Facebook: Xanh lam chính chủ */
+        .social-icon.facebook:hover {
+            background-color: #1877F2;
+            color: #ffffff;
+        }
+
+        /* TikTok: Nút đen */
+        .social-icon.tiktok:hover {
+            background-color: #010101;
+            color: #ffffff;
+        }
+
+        /* Roblox: Màu xanh dương sáng theo ảnh logo bạn gửi */
+        .social-icon.roblox:hover {
+            background-color: #0055ff;
+            color: #ffffff;
+        }
+
+        /* Osu! hồng đặc trưng */
+        .social-icon.osu {
+            background-color: rgba(255, 102, 170, 0.2);
+            color: #ff66aa;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: sans-serif;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+        }
+        .social-icon.osu:hover {
+            background-color: #ff66aa;
+            color: #ffffff;
+        }
+
+        /* Minecraft: Màu xanh lá cỏ sáng theo ảnh logo bạn gửi */
+        .social-icon.minecraft:hover {
+            background-color: #6cb843;
+            color: #ffffff;
+        }
+
+        /* Lượt xem góc trái dưới */
+        .view-count {
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Nút 3 chấm góc phải trên */
+        .menu-dots {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .menu-dots:hover {
+            opacity: 1;
+        }
+
+        /* Cấu trúc Pop-up danh sách tài khoản / Thông tin */
+        .popup-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            color: #fff;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+        .popup-title {
+            margin-top: 0;
+            font-size: 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            color: #aaa;
+            font-size: 20px;
+        }
+        .popup-close:hover {
+            color: #fff;
+        }
+
+        /* List item cho copy username */
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.08);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .user-info {
+            font-size: 14px;
+        }
+        .user-info span {
+            display: block;
+            font-weight: bold;
+            color: #00ddff;
+        }
+        .user-info small {
+            color: #ccc;
+        }
+        .btn-copy {
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+        .btn-copy:hover {
+            background: #666;
+        }
+
+        /* Style cho phần mô tả 3 chấm */
+        .about-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e0e0e0;
+            white-space: pre-line; /* Giữ nguyên cấu trúc dòng văn bản */
+        }
+
+        /* Toast thông báo góc màn hình khi copy thành công */
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 221, 255, 0.9);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10001;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay-entry" id="entryScreen" onclick="enterProfile()">
+        <div class="overlay-text">click to enter...</div>
+    </div>
+
+    <audio id="bgMusic" src="klt.mp3" loop></audio>
+
+    <div class="profile-card" id="profileCard">
+        <button class="menu-dots" onclick="openModal('modalAbout')" title="Thông tin"><i class="fas fa-ellipsis-h"></i></button>
+
+        <img src="avt.jpg" alt="Avatar" class="avatar">
+        
+        <h1 class="username">ヒカル (Nhatt Huyy)</h1>
+        
+        <div class="social-links">
+            <button class="social-icon discord" onclick="copyText('betsuni036')" title="Copy Discord ID"><i class="fab fa-discord"></i></button>
+            
+            <a href="https://www.facebook.com/profile.php?id=61576923092872" target="_blank" class="social-icon facebook" title="Facebook"><i class="fab fa-facebook"></i></a>
+            
+            <a href="https://www.tiktok.com/@itsabsolutepeak" target="_blank" class="social-icon tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            
+            <!-- Nút Roblox được thiết kế lại đúng tỉ lệ logo chuẩn Roblox -->
+            <button class="social-icon roblox" onclick="openModal('modalRoblox')" title="Roblox Users">
+                <svg class="roblox-svg-icon" viewBox="0 0 100 100">
+                    <g transform="rotate(-12 50 50)">
+                        <mask id="roblox-mask">
+                            <rect width="100" height="100" fill="white"/>
+                            <rect x="37.5" y="37.5" width="25" height="25" fill="black"/>
+                        </mask>
+                        <rect width="100" height="100" fill="currentColor" mask="url(#roblox-mask)"/>
+                    </g>
+                </svg>
+            </button>
+            
+            <a href="https://osu.ppy.sh/users/38825307" target="_blank" class="social-icon osu" title="Osu!">osu!</a>
+
+            <button class="social-icon minecraft" onclick="openModal('modalMinecraft')" title="Minecraft Users"><i class="fas fa-cubes"></i></button>
+        </div>
+
+        <div class="view-count">
+            <i class="fas fa-eye"></i> 9999
+        </div>
+    </div>
+
+    <div class="popup-modal" id="modalRoblox">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closeModal('modalRoblox')">&times;</span>
+            <h3 class="popup-title">
+                <svg class="roblox-svg-icon" viewBox="0 0 100 100" style="width:18px; height:18px;">
+                    <g transform="rotate(-12 50 50)">
+                        <mask id="roblox-mask-popup">
+                            <rect width="100" height="100" fill="white"/>
+                            <rect x="37.5" y="37.5" width="25" height="25" fill="black"/>
+                        </mask>
+                        <rect width="100" height="100" fill="currentColor" mask="url(#roblox-mask-popup)"/>
+                    </g>
+                </svg> 
+                Roblox Accounts
+            </h3>
+            
+            <div class="user-item">
+                <div class="user-info">
+                    <small>User 1</small>
+                    <span>Metzinerdu</span>
+                </div>
+                <button class="btn-copy" onclick="copyText('Metzinerdu')">Copy</button>
+            </div>
+
+            <div class="user-item">
+                <div class="user-info">
+                    <small>User 2</small>
+                    <span>Brbanafbsf</span>
+                </div>
+                <button class="btn-copy" onclick="copyText('Brbanafbsf')">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-modal" id="modalMinecraft">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closeModal('modalMinecraft')">&times;</span>
+            <h3 class="popup-title"><i class="fas fa-cubes"></i> Minecraft Accounts</h3>
+            
+            <div class="user-item">
+                <div class="user-info">
+                    <small>Dev server account</small>
+                    <span>Sapnap</span>
+                </div>
+                <button class="btn-copy" onclick="copyText('Sapnap')">Copy</button>
+            </div>
+
+            <div class="user-item">
+                <div class="user-info">
+                    <small>Play account</small>
+                    <span>MikuNakano06</span>
+                </div>
+                <button class="btn-copy" onclick="copyText('MikuNakano06')">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-modal" id="modalAbout">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closeModal('modalAbout')">&times;</span>
+            <h3 class="popup-title"><i class="fas fa-info-circle"></i> Giới thiệu</h3>
+            <!-- Phần Bio mới được cập nhật -->
+            <div class="about-text">Cảm ơn vì đã view my profile và nhắc lại lần cuối, TOI LA NGUOI CODE PROFILE MA (xl mng vì t bị hiểu nhầm qs nhiều) :)))
+Hoan hỉ xem bio :))</div>
+        </div>
+    </div>
+
+    <div class="toast-msg" id="toast">Đã copy thành công!</div>
+
+    <script>
+        function enterProfile() {
+            const music = document.getElementById('bgMusic');
+            music.play().catch(err => console.log("Lỗi tự động phát nhạc: ", err));
+
+            const entryScreen = document.getElementById('entryScreen');
+            entryScreen.style.opacity = '0';
+            setTimeout(() => {
+                entryScreen.style.display = 'none';
+            }, 800);
+
+            document.getElementById('profileCard').classList.add('active');
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.innerText = `Đã copy: ${text}`;
+                toast.style.opacity = '1';
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                }, 2000);
+            }).catch(err => {
+                console.error('Không thể copy: ', err);
+            });
+        }
+
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('popup-modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
